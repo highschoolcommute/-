@@ -211,7 +211,7 @@ if(!myAddr)return alert("請先設定地址");
 result.innerHTML="";
 list.forEach(s=>{
 let icon=schoolType[s]||"circle";
-let url=`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddr)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
+let url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddr)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
 result.innerHTML+=`
 <div class="item">
   <div style="display:flex; align-items:center; gap:6px;">
