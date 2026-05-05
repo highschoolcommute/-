@@ -197,8 +197,9 @@ navigator.serviceWorker.addEventListener('controllerchange', () => {
   window.location.reload();
 });
 
-// ===== 原功能（保持）=====
-const schoolType = { /*
+// ✅ 完整分類
+const schoolType = {
+
 "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中（北市大附中）":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中（弘道）":"star","數位實中（吉林）":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
 
 "淡江高中":"diamond","康橋高中":"diamond","金陵女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
@@ -207,8 +208,11 @@ const schoolType = { /*
 
 "東海高中":"circle","樹人家商":"circle","私立復興商工":"circle","穀保家商":"circle","智光商工":"circle","能仁家商":"circle","豫章工商":"circle","莊敬工家":"circle","中華商海":"circle","培德工家":"circle","育達高中":"circle","協和祐德高中":"circle","金甌女中":"circle","東方工商":"circle","喬治工商":"circle","開平餐飲":"circle","私立大同高中":"circle","稻江護家":"circle","新民高中":"circle","開南高中":"circle","稻江商職":"circle","滬江高中":"circle","景文高中":"circle","泰北高中":"circle","華岡藝校":"circle","惇敘工商":"circle","光華高商進修學校":"circle","南華高中進修學校":"circle","志仁中學進修學校":"circle",
 
-"臺北科技大學":"arrow","臺北商業大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學（淡水）":"arrow","台北海洋科技大學（士林）":"arrow","黎明技術學院":"arrow","德育護專":"arrow","馬偕護專（關渡）":"arrow","馬偕護專（三芝）":"arrow","耕莘護專（新店）":"arrow","康寧大學":"arrow","中華科技大學（台北）":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"*/
- };
+"臺北科技大學":"arrow","臺北商業大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學（淡水）":"arrow","台北海洋科技大學（士林）":"arrow","黎明技術學院":"arrow","德育護專":"arrow","馬偕護專（關渡）":"arrow","馬偕護專（三芝）":"arrow","耕莘護專（新店）":"arrow","康寧大學":"arrow","中華科技大學（台北）":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
+
+};
+
+// 學校清單
 const schools = Object.keys(schoolType);
 
 let list = JSON.parse(localStorage.getItem("schools")||"[]");
