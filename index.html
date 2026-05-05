@@ -2,114 +2,122 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>基北區高中職五專交通分布</title>
+    <title>基北高中交通 - 互動地圖版</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin: 0; font-family: "Microsoft JhengHei", sans-serif; background: #f4f7f6; color: #333; }
-        .topbar { background: #2c3e50; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; }
-        .section { padding: 15px; background: white; margin: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body { margin: 0; font-family: "Microsoft JhengHei", Arial, sans-serif; background: #f0f2f5; color: #333; }
+        .topbar { background: #2c3e50; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 1.1rem; }
         
-        iframe { width: 100%; height: 400px; border: none; border-radius: 8px; margin-bottom: 10px; }
-        
-        .input-group { display: flex; gap: 8px; margin-top: 10px; position: relative; }
-        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-        
-        .item {
-            background: #fff; margin: 8px 0; padding: 12px; border-radius: 8px;
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #eee; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .result-item { justify-content: flex-start; gap: 10px; border-left: 5px solid #27ae60; }
+        .section { padding: 12px; background: white; border-bottom: 1px solid #ddd; }
+        .addr-row { display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+        .my-addr-text { color: #555; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .suggestion { 
-            position: absolute; top: 45px; left: 0; right: 0; 
-            background: white; border: 1px solid #ccc; z-index: 1000;
-            max-height: 200px; overflow-y: auto; border-radius: 0 0 6px 6px;
-        }
-        .suggestion div { padding: 10px; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
-        .suggestion div:hover { background: #f8f9fa; }
-
-        button { cursor: pointer; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; transition: 0.2s; }
+        .search-row { display: flex; gap: 5px; margin-top: 10px; position: relative; }
+        input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        button { cursor: pointer; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; transition: 0.2s; }
+        .btn-gray { background: #e0e0e0; color: #333; border: 1px solid #ccc; }
         .btn-green { background: #27ae60; color: white; }
         .btn-blue { background: #2980b9; color: white; }
-        .btn-red { background: #e74c3c; color: white; padding: 5px 10px; font-size: 0.85rem; }
-        button:hover { opacity: 0.9; }
+        .btn-remove { background: #f2f2f2; color: #666; border: 1px solid #ddd; padding: 4px 10px; font-size: 0.9rem; }
 
-        .link { color: #2980b9; text-decoration: underline; font-weight: bold; }
-        
-        /* 圖示設計 */
+        iframe { width: 100%; height: 350px; border: none; display: block; }
+
+        .suggestion { 
+            position: absolute; top: 38px; left: 0; right: 85px; 
+            background: white; border: 1px solid #ccc; z-index: 9999;
+            max-height: 200px; overflow-y: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .suggestion div { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .suggestion div:hover { background: #f9f9f9; }
+
+        .list-title { padding: 10px 12px; font-weight: bold; background: #f0f2f5; font-size: 0.95rem; }
+        .item {
+            background: white; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-section { background: #f0f2f5; padding: 12px; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .result-item {
+            background: white; margin-bottom: 8px; padding: 12px; border-radius: 4px;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .link { color: #0000ee; text-decoration: underline; font-weight: bold; }
+
+        /* 圖示樣式 */
         .icon { display: inline-block; width: 18px; height: 18px; vertical-align: middle; }
         .star { background: #00a65a; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
         .diamond { background: #00a65a; transform: rotate(45deg); width: 14px; height: 14px; margin: 2px; }
-        .square { background: #6f42c1; }
+        .square { background: #6f42c1; width: 16px; height: 16px; }
         .circle { background: #6f42c1; border-radius: 50%; }
         .arrow { background-image: url("五專圖示-透明.png"); background-size: contain; background-repeat: no-repeat; width: 20px; height: 20px; }
 
-        .legend-row { display: flex; gap: 15px; margin-top: 8px; flex-wrap: wrap; }
-        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.95rem; }
-        .color-green { color: #00a65a; font-weight: bold; }
-        .color-purple { color: #6f42c1; font-weight: bold; }
+        .legend { padding: 12px; background: #f0f2f5; font-size: 0.9rem; }
+        .legend-row { display: flex; gap: 15px; margin-top: 8px; align-items: center; }
+        .color-green { color: #008000; }
+        .color-purple { color: #6f42c1; }
     </style>
 </head>
 
 <body>
 
-<div class="topbar">基北區高中職五專 交通分布</div>
-
-<!-- 嵌入互動地圖 -->
-<div class="section">
-    <iframe src="https://www.google.com/maps/d/embed?mid=1CwyqZQ0mLL4afResvNH5t1q2QB5xIYw"></iframe>
-    <p style="text-align: center; font-size: 0.8rem; color: #666;">（地圖資料將自動同步雲端最新版本）</p>
-</div>
+<div class="topbar">基北高中交通</div>
 
 <div class="section">
-    <b>🏠 我的起點地址：</b>
-    <div class="input-group">
-        <span id="myAddrDisplay" style="color: #d35400; font-weight: bold;">未設定</span>
-        <button class="btn-blue" onclick="setAddress()" style="margin-left: auto;">設定 / 修改</button>
+    <div class="addr-row">
+        <b>我的地址：</b>
+        <span id="myAddrDisplay" class="my-addr-text">尚未設定地址</span>
+        <button class="btn-gray" onclick="setAddress()">設定 / 修改</button>
     </div>
 </div>
 
 <div class="section">
-    <b>🔍 搜尋學校：</b>
-    <div class="input-group">
-        <input id="searchInput" placeholder="輸入關鍵字（如：板橋）" oninput="showSuggestions()" autocomplete="off">
-        <button class="btn-green" onclick="addSchool()">加入比較</button>
-        <button class="btn-blue" onclick="openGuide()">APP使用說明</button>
+    <div class="search-row">
+        <input id="searchInput" placeholder="輸入學校關鍵字" oninput="showSuggestions()" autocomplete="off">
+        <button class="btn-gray" onclick="addSchool()">加入比較</button>
         <div id="suggestBox" class="suggestion" style="display:none;"></div>
     </div>
+    <div style="margin-top:10px;">
+        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1_Y3i9M_m9yT6I4J4z9v6qE9R3eM"></iframe>
+    </div>
+    <div style="margin-top:10px;">
+        <button class="btn-blue" style="width:100%" onclick="openGuide()">📖 APP使用說明 (YouTube)</button>
+    </div>
 </div>
 
-<div class="section">
-    <b>📋 比較清單（最多5間）</b>
-    <div id="list"></div>
+<div class="list-title">比較清單（最多5間）</div>
+<div id="list"></div>
+
+<div class="result-section">
+    <div class="result-header">
+        <b>比較結果（點擊校名查看路線）</b>
+        <button class="btn-green" onclick="compare()">產生比較</button>
+    </div>
+    <div id="result"></div>
 </div>
 
-<div class="section">
-    <button class="btn-green" style="width: 100%; font-size: 1.1rem; padding: 12px;" onclick="compare()">產生比較結果</button>
-    <div id="result" style="margin-top: 15px;"></div>
-
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-    
-    <b>📌 圖例說明：</b>
+<div class="legend">
+    <b>圖例說明：</b>
     <div class="legend-row color-green">
-        <div class="legend-item"><span class="icon star"></span>公立高中</div>
-        <div class="legend-item"><span class="icon diamond"></span>私立高中</div>
+        <span><span class="icon star"></span> 公立高中</span>
+        <span><span class="icon diamond"></span> 私立高中</span>
     </div>
     <div class="legend-row color-purple">
-        <div class="legend-item"><span class="icon square"></span>公立高職</div>
-        <div class="legend-item"><span class="icon circle"></span>私立高職</div>
-        <div class="legend-item"><span class="icon arrow"></span>北區五專</div>
+        <span><span class="icon square"></span> 公立高職</span>
+        <span><span class="icon circle"></span> 私立高職</span>
+    </div>
+    <div class="legend-row color-purple" style="margin-top:10px;">
+        <span><span class="icon arrow"></span> 北區五專</span>
     </div>
 </div>
 
 <script>
-// 使用說明連結
-function openGuide(){
-    window.open("https://youtu.be/AYrfx5Q2wSw", "_blank");
-}
+// 11) 互動地圖網頁版基礎網址
+const MY_MAP_URL = "https://www.google.com/maps/d/u/0/viewer?mid=1_Y3i9M_m9yT6I4J4z9v6qE9R3eM";
 
-// 學校資料庫
+// 學校資料庫（包含類別與圖示）
 const schoolType = {
     "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
     "淡江高中":"diamond","康橋高中":"diamond","金陵女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
@@ -119,8 +127,8 @@ const schoolType = {
 };
 
 const schools = Object.keys(schoolType);
-let compareList = JSON.parse(localStorage.getItem("mySchools") || "[]");
-let myAddr = localStorage.getItem("myHomeAddr") || "";
+let compareList = JSON.parse(localStorage.getItem("mySchools_Map") || "[]");
+let myAddr = localStorage.getItem("myUserAddr_Map") || "";
 
 const searchInput = document.getElementById("searchInput");
 const suggestBox = document.getElementById("suggestBox");
@@ -132,37 +140,27 @@ const addrDisplay = document.getElementById("myAddrDisplay");
 if(myAddr) addrDisplay.innerText = myAddr;
 renderList();
 
-// 1) 設定地址
+// 1) 設定/修改地址
 function setAddress(){
-    let addr = prompt("請輸入您的住家地址：", myAddr);
+    let addr = prompt("請輸入您的地址：", myAddr);
     if(addr === null) return;
-    if(addr === "") {
-        alert("地址不能為空");
-        return;
-    }
-    myAddr = addr;
-    localStorage.setItem("myHomeAddr", addr);
-    addrDisplay.innerText = addr;
+    myAddr = addr || "尚未設定地址";
+    localStorage.setItem("myUserAddr_Map", myAddr);
+    addrDisplay.innerText = myAddr;
 }
 
-// 2) 自動比對關鍵字
+// 2) 自動建議
 function showSuggestions(){
     let val = searchInput.value.trim();
     suggestBox.innerHTML = "";
-    if(!val) {
-        suggestBox.style.display = "none";
-        return;
-    }
+    if(!val) { suggestBox.style.display = "none"; return; }
     let filtered = schools.filter(s => s.includes(val));
     if(filtered.length > 0){
         suggestBox.style.display = "block";
         filtered.slice(0, 10).forEach(s => {
             let div = document.createElement("div");
             div.innerText = s;
-            div.onclick = () => {
-                searchInput.value = s;
-                suggestBox.style.display = "none";
-            };
+            div.onclick = () => { searchInput.value = s; suggestBox.style.display = "none"; };
             suggestBox.appendChild(div);
         });
     } else {
@@ -173,59 +171,61 @@ function showSuggestions(){
 // 3) 加入比較
 function addSchool(){
     let name = searchInput.value.trim();
-    if(!name || !schoolType[name]) return alert("請從選單選擇正確的學校名稱");
-    if(compareList.includes(name)) return alert("此學校已在清單中");
-    if(compareList.length >= 5) return alert("最多只能選擇 5 所學校");
+    if(!name || !schoolType[name]) return alert("請選取正確的學校名稱");
+    if(compareList.includes(name)) return alert("此學校已在比較清單中");
+    if(compareList.length >= 5) return alert("最多選擇5間學校");
     
     compareList.push(name);
-    saveAndRender();
+    updateStorage();
     searchInput.value = "";
 }
 
-// 4) 移除功能
+// 4) 移除學校
 function removeSchool(name){
     compareList = compareList.filter(s => s !== name);
-    saveAndRender();
+    updateStorage();
 }
 
-function saveAndRender(){
-    localStorage.setItem("mySchools", JSON.stringify(compareList));
+function updateStorage(){
+    localStorage.setItem("mySchools_Map", JSON.stringify(compareList));
     renderList();
 }
 
 function renderList(){
-    listDiv.innerHTML = compareList.length === 0 ? "<small style='color:#999'>清單目前為空</small>" : "";
+    listDiv.innerHTML = compareList.length === 0 ? "<div class='item' style='color:#999'>清單目前為空</div>" : "";
     compareList.forEach(s => {
         listDiv.innerHTML += `
             <div class="item">
                 <span>${s}</span>
-                <button class="btn-red" onclick="removeSchool('${s}')">移除</button>
+                <button class="btn-remove" onclick="removeSchool('${s}')">移除</button>
             </div>`;
     });
 }
 
-// 5-7) 產生比較與導航功能
+// 5) 產生比較與 6) 連結互動地圖搜尋
 function compare(){
-    if(!myAddr) return alert("請先設定「我的地址」");
-    if(compareList.length === 0) return alert("請先加入學校到清單");
-
-    resultDiv.innerHTML = "<h3>比較結果：</h3>";
+    if(compareList.length === 0) return alert("請先加入學校");
+    resultDiv.innerHTML = "";
     compareList.forEach(s => {
-        let iconClass = schoolType[s];
-        // 修正 URL 拼接錯誤
-        let googleUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddr)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
+        let icon = schoolType[s];
+        // 關鍵：導向 My Maps 並帶入搜尋參數 q
+        // 這樣在行動裝置或電腦上開啟時，會定位到該點並彈出「更多資訊」
+        let mapSearchUrl = `${MY_MAP_URL}&q=${encodeURIComponent(s)}`;
 
         resultDiv.innerHTML += `
-            <div class="item result-item">
-                <span class="icon ${iconClass}"></span>
-                <a class="link" href="${googleUrl}" target="_blank">${s}</a>
+            <div class="result-item">
+                <span class="icon ${icon}"></span>
+                <a class="link" href="${mapSearchUrl}" target="_blank">${s}</a>
             </div>`;
     });
-    // 捲動到結果區
-    resultDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
-// 點擊空白處關閉建議盒
+// 9) YouTube 連結
+function openGuide(){
+    window.open("https://youtu.be/AYrfx5Q2wSw", "_blank");
+}
+
+// 點擊外部關閉搜尋盒
 document.addEventListener("click", (e) => {
     if(e.target !== searchInput) suggestBox.style.display = "none";
 });
