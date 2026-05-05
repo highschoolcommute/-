@@ -109,7 +109,7 @@ background:#f39c12;color:white;padding:10px;text-align:center;display:none;
 
 // 教學
 function openGuide(){
-window.open("(Youtube網址)","_blank");
+window.open("https://youtu.be/AYrfx5Q2wSw","_blank");
 }
 
 // PWA
@@ -214,8 +214,10 @@ let icon=schoolType[s]||"circle";
 let url=`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddr)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
 result.innerHTML+=`
 <div class="item">
-<span class="icon ${icon}"></span>
-<a class="link" href="${url}" target="_blank">${s}</a>
+  <div style="display:flex; align-items:center; gap:6px;">
+    <span class="icon ${icon}"></span>
+    <a class="link" href="${url}" target="_blank">${s}</a>
+  </div>
 </div>`;
 });
 }
