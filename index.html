@@ -51,13 +51,17 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 .btn-blue { background:#2980b9; color:white; padding:10px; font-size:0.95rem; }
 .btn-gray { background:#95a5a6; color:white; padding:6px 12px; font-size:0.85rem; }
 
-/* 圖示 */
+/* 圖示系統 */
 .icon { display:inline-block; width:18px; height:18px; margin-right:10px; vertical-align: middle; }
 .star { background:#00a65a; clip-path: polygon(50% 0%,61% 30%,98% 35%,68% 55%,79% 90%,50% 70%,21% 90%,32% 55%,2% 35%,39% 30%); }
 .diamond { background:#00a65a; transform:rotate(45deg); width:14px; height:14px; }
 .square { background:#6f42c1; }
 .circle { background:#6f42c1; border-radius:50%; }
-.arrow { background-image:url("五專圖示-透明.png"); background-size:contain; background-repeat:no-repeat; width:20px; height:20px; }
+/* 修正：亮深紫色向上箭頭 */
+.arrow { 
+    background-color: #6f42c1;
+    clip-path: polygon(50% 0%, 100% 50%, 75% 50%, 75% 100%, 25% 100%, 25% 50%, 0% 50%);
+}
 
 /* 圖例 */
 .legend { margin-top:15px; padding:12px; background:#f0f2f5; border-radius:6px; font-size:0.9rem; }
@@ -78,11 +82,11 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <div class="section">
     <div class="search-row">
-        <input id="schoolSearch" placeholder="輸入學校關鍵字..." oninput="filterSchools()" autocomplete="off">
+        <input id="schoolSearch" placeholder="搜尋學校關鍵字 (如：中山、內湖)..." oninput="filterSchools()" autocomplete="off">
         <button class="btn-green" onclick="pushToList()">加入清單</button>
         <div id="hintBox" class="suggestion"></div>
     </div>
-    <button class="btn-blue" style="width:100%" onclick="window.open('https://youtu.be/AYrfx5Q2wSw')">📖 APP 使用教學</button>
+    <button class="btn-blue" style="width:100%" onclick="window.open('https://youtu.be/AYrfx5Q2wSw')">📖 APP 使用教學影片</button>
 </div>
 
 <div class="map-container">
@@ -90,13 +94,13 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 </div>
 
 <div class="section">
-    <b>比較清單（上限 5所）</b>
+    <b>比較清單（上限 5 所）</b>
     <div id="listContainer"></div>
 </div>
 
 <div class="section">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <b>比較結果（點擊校名，規劃交通路線）</b>
+        <b>比較結果（點擊校名，規劃交通）</b>
         <button class="btn-green" onclick="showResults()">產生比較</button>
     </div>
     <div id="resultContainer"></div>
@@ -119,21 +123,21 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 <script>
 // 學校類別資料庫
 const typeMap = {
-    "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
+    "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
     "淡江高中":"diamond","康橋高中":"diamond","金陵女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
     "瑞芳高工":"square","三重商工":"square","新北高工":"square","淡水商工":"square","鶯歌工商":"square","樟樹實中":"square","海大附中":"square","基隆商工":"square","松山家商":"square","松山工農":"square","大安高工":"square","木柵高工":"square","南港高工":"square","內湖高工":"square","士林高商":"square",
     "東海高中":"circle","樹人家商":"circle","復興商工":"circle","穀保家商":"circle","智光商工":"circle","能仁家商":"circle","豫章工商":"circle","莊敬工家":"circle","中華商海":"circle","培德工家":"circle","育達高中":"circle","協和祐德高中":"circle","金甌女中":"circle","東方工商":"circle","喬治工商":"circle","開平餐飲":"circle","私立大同高中":"circle","稻江護家":"circle","新民高中":"circle","開南高中":"circle","稻江商職":"circle","滬江高中":"circle","景文高中":"circle","泰北高中":"circle","華岡藝校":"circle","惇敘工商":"circle",
-    "國立臺灣戲曲學院（內湖）":"arrow","國立臺灣戲曲學院（木柵）":"arrow","國立臺北科技大學":"arrow","國立臺北商業大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學":"arrow","黎明技術學院":"arrow","經國管理學院":"arrow","馬偕護專":"arrow","耕莘護專":"arrow","康寧大學":"arrow","中華科技大學":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
+    "國立臺灣戲曲學院（內湖）":"arrow","國立臺灣戲曲學院（木柵）":"arrow","國立臺北科技大學":"arrow","國立臺北商業大學":"arrow","國立臺北護理健康大學":"arrow","國立臺灣藝術大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學":"arrow","黎明技術學院":"arrow","經國管理學院":"arrow","馬偕護專":"arrow","耕莘護專":"arrow","康寧大學":"arrow","中華科技大學":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
 };
 
 const schoolNames = Object.keys(typeMap);
 
-// 1) 程式版本更新持久化處理
+// 1) 持久化儲存 (KEELUNG_TP_DATA_V2)
 let storageData = JSON.parse(localStorage.getItem("KEELUNG_TP_DATA_V2") || "{}");
 let mySchools = storageData.list || [];
 let myAddress = storageData.addr || "";
 
-// 初始化頁面顯示
+// 初始化顯示
 document.getElementById("displayAddr").innerText = myAddress || "尚未設定";
 renderList();
 
@@ -152,14 +156,13 @@ function updateAddr() {
     saveToLocal();
 }
 
-// 2) 搜尋功能：納入括號內的文字
+// 2) 搜尋功能：包含括號內容比對
 function filterSchools() {
     let input = document.getElementById("schoolSearch").value.toLowerCase();
     let box = document.getElementById("hintBox");
     box.innerHTML = "";
     if(!input) { box.style.display = "none"; return; }
     
-    // 比對整個字串（校名+括號內文字）
     let matched = schoolNames.filter(s => s.toLowerCase().includes(input));
     
     if(matched.length > 0) {
@@ -177,9 +180,9 @@ function pickSchool(name) {
 
 function pushToList() {
     let name = document.getElementById("schoolSearch").value;
-    if(!typeMap[name]) return alert("請由選單 點選正確校名");
-    if(mySchools.includes(name)) return alert("已在清單中");
-    if(mySchools.length >= 5) return alert("最多選 5 所學校");
+    if(!typeMap[name]) return alert("從選單中 選取正確校名");
+    if(mySchools.includes(name)) return alert("該校已在清單中");
+    if(mySchools.length >= 5) return alert("最多選取 5 所學校");
     mySchools.push(name);
     renderList();
     saveToLocal();
@@ -194,7 +197,7 @@ function popFromList(name) {
 
 function renderList() {
     let container = document.getElementById("listContainer");
-    container.innerHTML = mySchools.length === 0 ? "<div style='color:#999; padding:10px;'>目前清單沒有學校</div>" : "";
+    container.innerHTML = mySchools.length === 0 ? "<div style='color:#999; padding:10px;'>目前清單為空</div>" : "";
     mySchools.forEach(s => {
         container.innerHTML += `<div class="item"><span>${s}</span><button class="btn-gray" onclick="popFromList('${s}')">移除</button></div>`;
     });
@@ -202,14 +205,14 @@ function renderList() {
 
 function showResults() {
     if(mySchools.length === 0) return alert("請先加入學校");
-    if(!myAddress) return alert("請設定「我的地址」，以利規劃交通路線");
+    if(!myAddress) return alert("請設定「我的地址」，以利路徑規劃");
     
     let resBox = document.getElementById("resultContainer");
     resBox.innerHTML = "";
     
     mySchools.forEach(s => {
         let type = typeMap[s];
-        // 交通導航連結
+        // 核心功能：整合 Google Maps 導航
         let navLink = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddress)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
 
         resBox.innerHTML += `
@@ -220,7 +223,6 @@ function showResults() {
     });
 }
 
-// 點擊外部自動關閉提示框
 document.addEventListener("click", (e) => {
     if(e.target.id !== "schoolSearch") document.getElementById("hintBox").style.display = "none";
 });
