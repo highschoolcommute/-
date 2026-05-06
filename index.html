@@ -10,7 +10,7 @@
         
         .section { padding: 12px; background: white; border-bottom: 1px solid #ddd; }
         .addr-row { display: flex; align-items: center; gap: 8px; font-size: 1rem; }
-        .my-addr-text { color: #555; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .my-addr-text { color: #d35400; font-weight: bold; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .search-row { display: flex; gap: 5px; margin-top: 10px; position: relative; }
         input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
@@ -21,7 +21,7 @@
         .btn-blue { background: #2980b9; color: white; }
         .btn-remove { background: #f2f2f2; color: #666; border: 1px solid #ddd; padding: 4px 10px; font-size: 0.9rem; }
 
-        iframe { width: 100%; height: 350px; border: none; display: block; }
+        iframe { width: 100%; height: 350px; border: none; display: block; border-radius: 4px; }
 
         .suggestion { 
             position: absolute; top: 38px; left: 0; right: 85px; 
@@ -55,9 +55,9 @@
         .arrow { background-image: url("五專圖示-透明.png"); background-size: contain; background-repeat: no-repeat; width: 20px; height: 20px; }
 
         .legend { padding: 12px; background: #f0f2f5; font-size: 0.9rem; }
-        .legend-row { display: flex; gap: 15px; margin-top: 8px; align-items: center; }
-        .color-green { color: #008000; }
-        .color-purple { color: #6f42c1; }
+        .legend-row { display: flex; gap: 12px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+        .color-green { color: #008000; font-weight: bold; }
+        .color-purple { color: #6f42c1; font-weight: bold; }
     </style>
 </head>
 
@@ -80,7 +80,8 @@
         <div id="suggestBox" class="suggestion" style="display:none;"></div>
     </div>
     <div style="margin-top:10px;">
-        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1_Y3i9M_m9yT6I4J4z9v6qE9R3eM"></iframe>
+        <!-- 修正後的互動地圖嵌入 -->
+        <iframe id="mapFrame" src="https://www.google.com/maps/d/embed?mid=1CwyqZQ0mLL4afResvNH5t1q2QB5xIYw"></iframe>
     </div>
     <div style="margin-top:10px;">
         <button class="btn-blue" style="width:100%" onclick="openGuide()">📖 APP使用說明 (YouTube)</button>
@@ -104,31 +105,31 @@
         <span><span class="icon star"></span> 公立高中</span>
         <span><span class="icon diamond"></span> 私立高中</span>
     </div>
+    <!-- 需求 2：紫色字體類別排在同一行呈現 -->
     <div class="legend-row color-purple">
         <span><span class="icon square"></span> 公立高職</span>
         <span><span class="icon circle"></span> 私立高職</span>
-    </div>
-    <div class="legend-row color-purple" style="margin-top:10px;">
         <span><span class="icon arrow"></span> 北區五專</span>
     </div>
 </div>
 
 <script>
-// 11) 互動地圖網頁版基礎網址
-const MY_MAP_URL = "https://www.google.com/maps/d/u/0/viewer?mid=1_Y3i9M_m9yT6I4J4z9v6qE9R3eM";
+// 修正後的地圖 Mid
+const MAP_MID = "1CwyqZQ0mLL4afResvNH5t1q2QB5xIYw";
+const BASE_VIEWER_URL = `https://www.google.com/maps/d/viewer?mid=${MAP_MID}`;
 
-// 學校資料庫（包含類別與圖示）
 const schoolType = {
     "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
-    "淡江高中":"diamond","康橋高中":"diamond","金陵女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
+    "淡江高中":"diamond","康橋高中":"diamond","金陵女女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
     "瑞芳高工":"square","三重商工":"square","新北高工":"square","淡水商工":"square","鶯歌工商":"square","樟樹實中":"square","海大附中":"square","基隆商工":"square","松山家商":"square","松山工農":"square","大安高工":"square","木柵高工":"square","南港高工":"square","內湖高工":"square","士林高商":"square",
     "東海高中":"circle","樹人家商":"circle","復興商工":"circle","穀保家商":"circle","智光商工":"circle","能仁家商":"circle","豫章工商":"circle","莊敬工家":"circle","中華商海":"circle","培德工家":"circle","育達高中":"circle","協和祐德高中":"circle","金甌女中":"circle","東方工商":"circle","喬治工商":"circle","開平餐飲":"circle","私立大同高中":"circle","稻江護家":"circle","新民高中":"circle","開南高中":"circle","稻江商職":"circle","滬江高中":"circle","景文高中":"circle","泰北高中":"circle","華岡藝校":"circle","惇敘工商":"circle",
     "臺北科技大學":"arrow","臺北商業大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學":"arrow","黎明技術學院":"arrow","經國管理學院":"arrow","馬偕護專":"arrow","耕莘護專":"arrow","康寧大學":"arrow","中華科技大學":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
 };
 
 const schools = Object.keys(schoolType);
-let compareList = JSON.parse(localStorage.getItem("mySchools_Map") || "[]");
-let myAddr = localStorage.getItem("myUserAddr_Map") || "";
+// 需求 3：使用 localStorage 紀錄並讀取地址
+let compareList = JSON.parse(localStorage.getItem("gh_schools") || "[]");
+let myAddr = localStorage.getItem("gh_myAddr") || "";
 
 const searchInput = document.getElementById("searchInput");
 const suggestBox = document.getElementById("suggestBox");
@@ -136,20 +137,19 @@ const listDiv = document.getElementById("list");
 const resultDiv = document.getElementById("result");
 const addrDisplay = document.getElementById("myAddrDisplay");
 
-// 初始化
+// 初始化顯示
 if(myAddr) addrDisplay.innerText = myAddr;
 renderList();
 
-// 1) 設定/修改地址
+// 設定地址並儲存
 function setAddress(){
-    let addr = prompt("請輸入您的地址：", myAddr);
+    let addr = prompt("請輸入您的地址（將自動儲存）：", myAddr);
     if(addr === null) return;
-    myAddr = addr || "尚未設定地址";
-    localStorage.setItem("myUserAddr_Map", myAddr);
+    myAddr = addr.trim() || "尚未設定地址";
+    localStorage.setItem("gh_myAddr", myAddr);
     addrDisplay.innerText = myAddr;
 }
 
-// 2) 自動建議
 function showSuggestions(){
     let val = searchInput.value.trim();
     suggestBox.innerHTML = "";
@@ -168,31 +168,28 @@ function showSuggestions(){
     }
 }
 
-// 3) 加入比較
 function addSchool(){
     let name = searchInput.value.trim();
-    if(!name || !schoolType[name]) return alert("請選取正確的學校名稱");
-    if(compareList.includes(name)) return alert("此學校已在比較清單中");
-    if(compareList.length >= 5) return alert("最多選擇5間學校");
-    
+    if(!name || !schoolType[name]) return alert("請由下拉選單選取正確校名");
+    if(compareList.includes(name)) return alert("已在清單中");
+    if(compareList.length >= 5) return alert("最多5間");
     compareList.push(name);
     updateStorage();
     searchInput.value = "";
 }
 
-// 4) 移除學校
 function removeSchool(name){
     compareList = compareList.filter(s => s !== name);
     updateStorage();
 }
 
 function updateStorage(){
-    localStorage.setItem("mySchools_Map", JSON.stringify(compareList));
+    localStorage.setItem("gh_schools", JSON.stringify(compareList));
     renderList();
 }
 
 function renderList(){
-    listDiv.innerHTML = compareList.length === 0 ? "<div class='item' style='color:#999'>清單目前為空</div>" : "";
+    listDiv.innerHTML = compareList.length === 0 ? "<div class='item' style='color:#999'>尚未加入學校</div>" : "";
     compareList.forEach(s => {
         listDiv.innerHTML += `
             <div class="item">
@@ -202,16 +199,14 @@ function renderList(){
     });
 }
 
-// 5) 產生比較與 6) 連結互動地圖搜尋
+// 需求 1：修正產生比較後的 My Maps 連結
 function compare(){
     if(compareList.length === 0) return alert("請先加入學校");
     resultDiv.innerHTML = "";
     compareList.forEach(s => {
         let icon = schoolType[s];
-        // 關鍵：導向 My Maps 並帶入搜尋參數 q
-        // 這樣在行動裝置或電腦上開啟時，會定位到該點並彈出「更多資訊」
-        let mapSearchUrl = `${MY_MAP_URL}&q=${encodeURIComponent(s)}`;
-
+        // 透過 q 參數進行地圖內搜尋，能有效觸發 My Maps 的資訊視窗
+        let mapSearchUrl = `${BASE_VIEWER_URL}&q=${encodeURIComponent(s)}`;
         resultDiv.innerHTML += `
             <div class="result-item">
                 <span class="icon ${icon}"></span>
@@ -220,12 +215,10 @@ function compare(){
     });
 }
 
-// 9) YouTube 連結
 function openGuide(){
     window.open("https://youtu.be/AYrfx5Q2wSw", "_blank");
 }
 
-// 點擊外部關閉搜尋盒
 document.addEventListener("click", (e) => {
     if(e.target !== searchInput) suggestBox.style.display = "none";
 });
