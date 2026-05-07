@@ -2,16 +2,12 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>基北高中交通</title>
+<title>基北高中交通整合系統</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body { margin:0; font-family: "Microsoft JhengHei", sans-serif; background:#f4f7f6; color:#333; line-height:1.5; }
-
-/* 頂部標題 */
 .topbar { background:#2c3e50; color:white; padding:12px; text-align:center; font-weight:bold; font-size:1.1rem; }
-
-/* 區塊樣式 */
 .section { padding:12px; background:white; border-bottom:1px solid #ddd; }
 .addr-info { color:#d35400; font-weight:bold; margin:0 5px; }
 
@@ -31,25 +27,37 @@ input { flex:1; padding:10px; border:1px solid #ccc; border-radius:4px; font-siz
 iframe { width:100%; height:100%; border:none; }
 
 /* 清單與卡片 */
-.item {
-  background:#fff; margin:6px 0; padding:12px; border-radius:8px;
-  display:flex; justify-content:space-between; align-items:center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-.result-card {
-  background:white; margin-bottom:10px; padding:16px; border-radius:8px;
-  display:flex; align-items:center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  border-left: 6px solid #27ae60;
-}
-.school-link {
-  color: #0000ee; text-decoration: underline; font-weight: bold; font-size: 1.1rem; cursor: pointer;
-}
+.item { background:#fff; margin:6px 0; padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.result-card { background:white; margin-bottom:10px; padding:16px; border-radius:8px; display:flex; align-items:center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 6px solid #27ae60; }
+.school-link { color: #0000ee; text-decoration: underline; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
 
-/* 按鈕 */
+/* 按鈕系統 */
 button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; transition:0.2s; }
 .btn-green { background:#27ae60; color:white; padding:8px 16px; }
 .btn-blue { background:#2980b9; color:white; padding:10px; font-size:0.95rem; }
 .btn-gray { background:#95a5a6; color:white; padding:6px 12px; font-size:0.85rem; }
+
+/* ✅ 調整：大眾運輸官網按鈕配置 */
+.transport-grid { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 12px; /* 增加按鈕之間的距離 */
+    margin-top: 12px; 
+}
+.btn-transport { 
+    background: #ecf0f1; 
+    color: #2c3e50; 
+    padding: 14px 5px; /* 增加高度便於點擊 */
+    text-align: center; 
+    border: 1px solid #bdc3c7; 
+    font-size: 0.9rem; 
+    text-decoration: none; 
+    display: block; 
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.btn-transport:active { background: #d6dbdf; transform: scale(0.98); }
 
 /* 圖示系統 */
 .icon { display:inline-block; width:18px; height:18px; margin-right:10px; vertical-align: middle; }
@@ -57,13 +65,8 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 .diamond { background:#00a65a; transform:rotate(45deg); width:14px; height:14px; }
 .square { background:#6f42c1; }
 .circle { background:#6f42c1; border-radius:50%; }
-/* 修正：亮深紫色向上箭頭 */
-.arrow { 
-    background-color: #6f42c1;
-    clip-path: polygon(50% 0%, 100% 50%, 75% 50%, 75% 100%, 25% 100%, 25% 50%, 0% 50%);
-}
+.arrow { background-color: #6f42c1; clip-path: polygon(50% 0%, 100% 50%, 75% 50%, 75% 100%, 25% 100%, 25% 50%, 0% 50%); }
 
-/* 圖例 */
 .legend { margin-top:15px; padding:12px; background:#f0f2f5; border-radius:6px; font-size:0.9rem; }
 .legend-row { display:flex; flex-wrap:wrap; gap:15px; margin-top:8px; }
 .purple-row { color:#6f42c1; font-weight:bold; display:flex; gap:15px; flex-wrap:wrap; width:100%; border-top:1px solid #ccc; padding-top:10px; }
@@ -72,7 +75,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <body>
 
-<div class="topbar">基北高中交通</div>
+<div class="topbar">基北高中交通整合系統</div>
 
 <div class="section">
     <b>我的地址：</b>
@@ -82,7 +85,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <div class="section">
     <div class="search-row">
-        <input id="schoolSearch" placeholder="搜尋學校關鍵字 (如：中山、內湖)..." oninput="filterSchools()" autocomplete="off">
+        <input id="schoolSearch" placeholder="搜尋學校關鍵字 (支援台/臺、北市、士林等)..." oninput="filterSchools()" autocomplete="off">
         <button class="btn-green" onclick="pushToList()">加入清單</button>
         <div id="hintBox" class="suggestion"></div>
     </div>
@@ -90,7 +93,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 </div>
 
 <div class="map-container">
-    <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1CwyqZQ0mLL4afResvNH5t1q2QB5xIYw&ehbc=2E312F"></iframe>
+    <iframe src="https://www.google.com/maps/dir/?api=1&origin=$5"></iframe>
 </div>
 
 <div class="section">
@@ -100,10 +103,22 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <div class="section">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <b>比較結果（點擊校名，規劃交通）</b>
+        <b>比較結果（點擊校名規劃交通）</b>
         <button class="btn-green" onclick="showResults()">產生比較</button>
     </div>
     <div id="resultContainer"></div>
+
+    <div style="margin-top: 25px; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 8px;">
+        <b style="font-size: 1rem;">大眾交通官網：</b>
+        <div class="transport-grid">
+            <a href="https://www.metro.taipei/cp.aspx?n=91974F2B13D997F1" target="_blank" class="btn-transport">🚇 台北捷運</a>
+            <a href="https://www.youbike.com.tw/region/ntpc/stations/" target="_blank" class="btn-transport">🚲 YouBike</a>
+            <a href="https://ebus.gov.taipei/ebus" target="_blank" class="btn-transport">🚌 大台北公車</a>
+            <a href="https://ebus.klcba.gov.tw/KLBusRWDWeb/index" target="_blank" class="btn-transport">⚓ 基隆市公車</a>
+            <a href="https://www.thsrc.com.tw/ArticleContent/a3b630bb-1066-4352-a1ef-58c7b4e8ef7c" target="_blank" class="btn-transport">🚅 台灣高鐵</a>
+            <a href="https://tip.railway.gov.tw/tra-tip-web/tip/tip001/tip112/gobytime" target="_blank" class="btn-transport">🚂 台鐵火車</a>
+        </div>
+    </div>
 
     <div class="legend">
         <b>圖例說明：</b>
@@ -121,50 +136,49 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 </div>
 
 <script>
-// 學校類別資料庫
 const typeMap = {
     "華僑高中":"star","泰山高中":"star","板橋高中":"star","新店高中":"star","中和高中":"star","新莊高中":"star","新北高中":"star","林口高中":"star","海山高中":"star","三重高中":"star","永平高中":"star","樹林高中":"star","明德高中":"star","秀峰高中":"star","金山高中":"star","安康高中":"star","雙溪高中":"star","石碇高中":"star","丹鳳高中":"star","清水高中":"star","三民高中":"star","錦和高中":"star","光復高中":"star","竹圍高中":"star","北大高中":"star","基隆女中":"star","基隆高中":"star","基隆中山高中":"star","安樂高中":"star","暖暖高中":"star","八斗高中":"star","西松高中":"star","中崙高中":"star","松山高中":"star","永春高中":"star","師大附中":"star","和平高中":"star","芳和實中":"star","中山女中":"star","市立大同高中":"star","大直高中":"star","建國中學":"star","成功中學":"star","北一女中":"star","明倫高中":"star","成淵高中":"star","華江高中":"star","大理高中":"star","政大附中":"star","景美女中":"star","萬芳高中":"star","數位實中":"star","南港高中":"star","育成高中":"star","內湖高中":"star","麗山高中":"star","南湖高中":"star","陽明高中":"star","百齡高中":"star","市立復興高中":"star","中正高中":"star",
-    "淡江高中":"diamond","康橋高中":"diamond","金陵女中":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
+    "淡江高中":"diamond","康橋高中":"diamond","金陵女女":"diamond","裕德高中":"diamond","南山高中":"diamond","恆毅高中":"diamond","聖心女中":"diamond","崇義高中":"diamond","格致高中":"diamond","醒吾高中":"diamond","徐匯高中":"diamond","崇光高中":"diamond","光仁高中":"diamond","竹林高中":"diamond","中信高中":"diamond","辭修高中":"diamond","林口康橋高中":"diamond","時雨高中":"diamond","二信高中":"diamond","輔大聖心高中":"diamond","延平中學":"diamond","私立復興實中":"diamond","靜修高中":"diamond","東山高中":"diamond","再興中學":"diamond","靜心高中":"diamond","達人高中":"diamond","衛理女中":"diamond","華興中學":"diamond","薇閣高中":"diamond","幼華高中":"diamond","奎山實中":"diamond",
     "瑞芳高工":"square","三重商工":"square","新北高工":"square","淡水商工":"square","鶯歌工商":"square","樟樹實中":"square","海大附中":"square","基隆商工":"square","松山家商":"square","松山工農":"square","大安高工":"square","木柵高工":"square","南港高工":"square","內湖高工":"square","士林高商":"square",
     "東海高中":"circle","樹人家商":"circle","復興商工":"circle","穀保家商":"circle","智光商工":"circle","能仁家商":"circle","豫章工商":"circle","莊敬工家":"circle","中華商海":"circle","培德工家":"circle","育達高中":"circle","協和祐德高中":"circle","金甌女中":"circle","東方工商":"circle","喬治工商":"circle","開平餐飲":"circle","私立大同高中":"circle","稻江護家":"circle","新民高中":"circle","開南高中":"circle","稻江商職":"circle","滬江高中":"circle","景文高中":"circle","泰北高中":"circle","華岡藝校":"circle","惇敘工商":"circle",
-    "國立臺灣戲曲學院（內湖）":"arrow","國立臺灣戲曲學院（木柵）":"arrow","國立臺北科技大學":"arrow","國立臺北商業大學":"arrow","國立臺北護理健康大學":"arrow","國立臺灣藝術大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學":"arrow","黎明技術學院":"arrow","經國管理學院":"arrow","馬偕護專":"arrow","耕莘護專":"arrow","康寧大學":"arrow","中華科技大學":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
+    "國立臺灣戲曲學院（內湖）":"arrow","國立臺灣戲曲學院（木柵）":"arrow","國立臺北科技大學":"arrow","國立臺北商業大學":"arrow","國立臺北護理健康大學":"arrow","國立臺灣藝術大學":"arrow","臺北城市科技大學":"arrow","致理科技大學":"arrow","宏國德霖科技大學":"arrow","台北海洋科技大學（淡水）":"arrow","台北海洋科技大學（士林）":"arrow","黎明技術學院":"arrow","經國管理學院":"arrow","馬偕護專":"arrow","耕莘護專":"arrow","康寧大學":"arrow","中華科技大學":"arrow","龍華科技大學":"arrow","聖母護專":"arrow","新生護專":"arrow","慈濟大學":"arrow"
 };
 
 const schoolNames = Object.keys(typeMap);
 
-// 1) 持久化儲存 (KEELUNG_TP_DATA_V2)
-let storageData = JSON.parse(localStorage.getItem("KEELUNG_TP_DATA_V2") || "{}");
+let storageData = JSON.parse(localStorage.getItem("KB_TRANS_V4") || "{}");
 let mySchools = storageData.list || [];
 let myAddress = storageData.addr || "";
 
-// 初始化顯示
 document.getElementById("displayAddr").innerText = myAddress || "尚未設定";
 renderList();
 
 function saveToLocal() {
-    localStorage.setItem("KEELUNG_TP_DATA_V2", JSON.stringify({
-        addr: myAddress,
-        list: mySchools
-    }));
+    localStorage.setItem("KB_TRANS_V4", JSON.stringify({ addr: myAddress, list: mySchools }));
 }
 
 function updateAddr() {
-    let val = prompt("設定起點詳細地址（例：台北市忠孝東路一段1號）：", myAddress);
+    let val = prompt("請設定您的起點地址：", myAddress);
     if(val === null) return;
     myAddress = val.trim();
     document.getElementById("displayAddr").innerText = myAddress || "尚未設定";
     saveToLocal();
 }
 
-// 2) 搜尋功能：包含括號內容比對
 function filterSchools() {
     let input = document.getElementById("schoolSearch").value.toLowerCase();
     let box = document.getElementById("hintBox");
     box.innerHTML = "";
     if(!input) { box.style.display = "none"; return; }
     
-    let matched = schoolNames.filter(s => s.toLowerCase().includes(input));
-    
+    const normalize = (str) => str.replace(/台/g, '臺').replace(/台北/g, '臺北');
+    let normalizedInput = normalize(input);
+
+    let matched = schoolNames.filter(s => {
+        let normalizedSchool = normalize(s.toLowerCase());
+        return normalizedSchool.includes(normalizedInput);
+    });
+
     if(matched.length > 0) {
         box.style.display = "block";
         matched.slice(0, 10).forEach(m => {
@@ -180,9 +194,9 @@ function pickSchool(name) {
 
 function pushToList() {
     let name = document.getElementById("schoolSearch").value;
-    if(!typeMap[name]) return alert("從選單中 選取正確校名");
-    if(mySchools.includes(name)) return alert("該校已在清單中");
-    if(mySchools.length >= 5) return alert("最多選取 5 所學校");
+    if(!typeMap[name]) return alert("請由選單中選擇正確校名");
+    if(mySchools.includes(name)) return alert("已在清單中");
+    if(mySchools.length >= 5) return alert("最多 5 所");
     mySchools.push(name);
     renderList();
     saveToLocal();
@@ -205,16 +219,12 @@ function renderList() {
 
 function showResults() {
     if(mySchools.length === 0) return alert("請先加入學校");
-    if(!myAddress) return alert("請設定「我的地址」，以利路徑規劃");
-    
+    if(!myAddress) return alert("請先設定起點地址");
     let resBox = document.getElementById("resultContainer");
     resBox.innerHTML = "";
-    
     mySchools.forEach(s => {
         let type = typeMap[s];
-        // 核心功能：整合 Google Maps 導航
-        let navLink = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddress)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
-
+        let navLink = `https://www.google.com/maps/dir/?api=1&origin=$6{encodeURIComponent(myAddress)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
         resBox.innerHTML += `
             <div class="result-card">
                 <span class="icon ${type}"></span>
