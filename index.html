@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>基北高中交通整合系統</title>
+<title>基北高中交通</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -75,7 +75,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <body>
 
-<div class="topbar">基北高中交通整合系統</div>
+<div class="topbar">基北高中交通</div>
 
 <div class="section">
     <b>我的地址：</b>
@@ -103,7 +103,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <div class="section">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <b>比較結果（點擊校名規劃交通）</b>
+        <b>比較結果（點擊校名，規劃交通）</b>
         <button class="btn-green" onclick="showResults()">產生比較</button>
     </div>
     <div id="resultContainer"></div>
@@ -158,7 +158,7 @@ function saveToLocal() {
 }
 
 function updateAddr() {
-    let val = prompt("請設定您的起點地址：", myAddress);
+    let val = prompt("設定出發地址：", myAddress);
     if(val === null) return;
     myAddress = val.trim();
     document.getElementById("displayAddr").innerText = myAddress || "尚未設定";
@@ -194,7 +194,7 @@ function pickSchool(name) {
 
 function pushToList() {
     let name = document.getElementById("schoolSearch").value;
-    if(!typeMap[name]) return alert("請由選單中選擇正確校名");
+    if(!typeMap[name]) return alert("請由選單中，選擇正確校名");
     if(mySchools.includes(name)) return alert("已在清單中");
     if(mySchools.length >= 5) return alert("最多 5 所");
     mySchools.push(name);
@@ -219,7 +219,7 @@ function renderList() {
 
 function showResults() {
     if(mySchools.length === 0) return alert("請先加入學校");
-    if(!myAddress) return alert("請先設定起點地址");
+    if(!myAddress) return alert("請先設定出發地址");
     let resBox = document.getElementById("resultContainer");
     resBox.innerHTML = "";
     mySchools.forEach(s => {
