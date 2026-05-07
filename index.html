@@ -2,8 +2,14 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>基北高中交通</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>基北高中交通整合系統</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="基北高中交通">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.png" type="image/png">
 
 <style>
@@ -38,17 +44,17 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 .btn-blue { background:#2980b9; color:white; padding:10px; font-size:0.95rem; }
 .btn-gray { background:#95a5a6; color:white; padding:6px 12px; font-size:0.85rem; }
 
-/* ✅ 調整：大眾運輸官網按鈕配置 */
+/* 大眾運輸官網按鈕配置 */
 .transport-grid { 
     display: grid; 
     grid-template-columns: repeat(2, 1fr); 
-    gap: 12px; /* 增加按鈕之間的距離 */
+    gap: 12px; 
     margin-top: 12px; 
 }
 .btn-transport { 
     background: #ecf0f1; 
     color: #2c3e50; 
-    padding: 14px 5px; /* 增加高度便於點擊 */
+    padding: 14px 5px; 
     text-align: center; 
     border: 1px solid #bdc3c7; 
     font-size: 0.9rem; 
@@ -76,7 +82,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <body>
 
-<div class="topbar">基北高中交通</div>
+<div class="topbar">基北高中交通整合系統</div>
 
 <div class="section">
     <b>我的地址：</b>
@@ -86,7 +92,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 
 <div class="section">
     <div class="search-row">
-        <input id="schoolSearch" placeholder="搜尋學校關鍵字 (支援台/臺、北市、士林等)..." oninput="filterSchools()" autocomplete="off">
+        <input id="schoolSearch" placeholder="搜尋學校關鍵字 ..." oninput="filterSchools()" autocomplete="off">
         <button class="btn-green" onclick="pushToList()">加入清單</button>
         <div id="hintBox" class="suggestion"></div>
     </div>
@@ -94,7 +100,7 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
 </div>
 
 <div class="map-container">
-    <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1EzHWc4yA658aj7Gw8oUGOZisiVol_3M&ehbc=2E312F" width="640" height="480"></iframe>
+    <iframe src="https://www.google.com/maps/dir/?api=1&origin=$8"></iframe>
 </div>
 
 <div class="section">
@@ -109,18 +115,6 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
     </div>
     <div id="resultContainer"></div>
 
-    <div style="margin-top: 25px; padding: 10px; background: #fff; border: 1px solid #eee; border-radius: 8px;">
-        <b style="font-size: 1rem;">大眾交通官網：</b>
-        <div class="transport-grid">
-            <a href="https://www.metro.taipei/cp.aspx?n=91974F2B13D997F1" target="_blank" class="btn-transport">🚇 台北捷運</a>
-            <a href="https://www.youbike.com.tw/region/ntpc/stations/" target="_blank" class="btn-transport">🚲 YouBike</a>
-            <a href="https://ebus.gov.taipei/ebus" target="_blank" class="btn-transport">🚌 大台北公車</a>
-            <a href="https://ebus.klcba.gov.tw/KLBusRWDWeb/index" target="_blank" class="btn-transport">⚓ 基隆市公車</a>
-            <a href="https://www.thsrc.com.tw/ArticleContent/a3b630bb-1066-4352-a1ef-58c7b4e8ef7c" target="_blank" class="btn-transport">🚅 台灣高鐵</a>
-            <a href="https://tip.railway.gov.tw/tra-tip-web/tip/tip001/tip112/gobytime" target="_blank" class="btn-transport">🚂 台鐵火車</a>
-        </div>
-    </div>
-
     <div class="legend">
         <b>圖例說明：</b>
         <div class="legend-row">
@@ -132,6 +126,18 @@ button { cursor:pointer; border:none; border-radius:4px; font-weight:bold; trans
                 <span><span class="icon circle"></span>私立高職</span>
                 <span><span class="icon arrow"></span>北區五專</span>
             </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 25px; padding: 12px; background: #fff; border: 1px solid #ddd; border-radius: 8px;">
+        <b style="font-size: 1rem; color:#2c3e50;">大眾運輸官網：</b>
+        <div class="transport-grid">
+            <a href="https://www.metro.taipei/cp.aspx?n=91974F2B13D997F1" target="_blank" class="btn-transport">🚇 台北捷運</a>
+            <a href="https://www.youbike.com.tw/region/ntpc/stations/" target="_blank" class="btn-transport">🚲 YouBike</a>
+            <a href="https://ebus.gov.taipei/ebus" target="_blank" class="btn-transport">🚌 大台北公車</a>
+            <a href="https://ebus.klcba.gov.tw/KLBusRWDWeb/index" target="_blank" class="btn-transport">⚓ 基隆市公車</a>
+            <a href="https://www.thsrc.com.tw/ArticleContent/a3b630bb-1066-4352-a1ef-58c7b4e8ef7c" target="_blank" class="btn-transport">🚅 台灣高鐵</a>
+            <a href="https://tip.railway.gov.tw/tra-tip-web/tip/tip001/tip112/gobytime" target="_blank" class="btn-transport">🚂 台鐵火車</a>
         </div>
     </div>
 </div>
@@ -147,7 +153,7 @@ const typeMap = {
 
 const schoolNames = Object.keys(typeMap);
 
-let storageData = JSON.parse(localStorage.getItem("KB_TRANS_V4") || "{}");
+let storageData = JSON.parse(localStorage.getItem("KB_TRANS_V5") || "{}");
 let mySchools = storageData.list || [];
 let myAddress = storageData.addr || "";
 
@@ -155,7 +161,7 @@ document.getElementById("displayAddr").innerText = myAddress || "尚未設定";
 renderList();
 
 function saveToLocal() {
-    localStorage.setItem("KB_TRANS_V4", JSON.stringify({ addr: myAddress, list: mySchools }));
+    localStorage.setItem("KB_TRANS_V5", JSON.stringify({ addr: myAddress, list: mySchools }));
 }
 
 function updateAddr() {
@@ -225,7 +231,7 @@ function showResults() {
     resBox.innerHTML = "";
     mySchools.forEach(s => {
         let type = typeMap[s];
-        let navLink = `https://www.google.com/maps/dir/?api=1&origin=$6{encodeURIComponent(myAddress)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
+        let navLink = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(myAddress)}&destination=${encodeURIComponent(s)}&travelmode=transit`;
         resBox.innerHTML += `
             <div class="result-card">
                 <span class="icon ${type}"></span>
@@ -237,6 +243,13 @@ function showResults() {
 document.addEventListener("click", (e) => {
     if(e.target.id !== "schoolSearch") document.getElementById("hintBox").style.display = "none";
 });
+
+// PWA Service Worker 註冊 (確保離線緩存運作)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW error:', err));
+  });
+}
 </script>
 
 </body>
